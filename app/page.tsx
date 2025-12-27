@@ -3,15 +3,13 @@
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-  const API = process.env.BACKEND_URL;
+  const API = process.env.NEXT_PUBLIC_BACKEND_URL!;
+
   const response = await fetch(`${API}/products`, {
     cache: 'no-store',
   });
 
   const products = await response.json();
-
-  console.log('isArray:', Array.isArray(products));
-  console.log(products);
 
   return (
     <div>
