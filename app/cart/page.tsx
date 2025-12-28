@@ -38,14 +38,14 @@ export default function CartPage() {
   // Estado de carga
   if (!hasHydrated) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black flex items-center justify-center">
+      <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black flex items-center justify-center pt-20">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 animate-pulse">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-zinc-900 border border-cyan-500/20 animate-pulse">
+            <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <p className="text-white text-lg font-medium">Cargando carrito...</p>
+          <p className="text-zinc-300 text-lg font-medium">Cargando carrito...</p>
         </div>
       </main>
     );
@@ -54,9 +54,9 @@ export default function CartPage() {
   // Carrito vacío
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black flex items-center justify-center px-6">
+      <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black flex items-center justify-center px-6 pt-20">
         <div className="text-center space-y-6 max-w-md">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-zinc-900 border-2 border-zinc-800">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-zinc-900 border border-cyan-500/20">
             <svg className="w-12 h-12 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -64,15 +64,15 @@ export default function CartPage() {
           
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white">Tu carrito está vacío</h2>
-            <p className="text-zinc-500">Agrega productos para comenzar tu compra</p>
+            <p className="text-zinc-400">Agrega productos para comenzar tu compra</p>
           </div>
 
           <Link 
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold hover:from-cyan-400 hover:to-purple-500 transition-all duration-200"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Ir a la tienda
           </Link>
@@ -83,71 +83,68 @@ export default function CartPage() {
 
   // Carrito con productos
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black">
-      {/* Header */}
-      <div className="border-b border-zinc-800/50 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-black text-white mb-1">Mi Carrito</h1>
-              <p className="text-zinc-500 text-sm">
-                {items.length} {items.length === 1 ? "producto" : "productos"}
-              </p>
-            </div>
-            
-            <Link 
-              href="/"
-              className="flex items-center gap-2 text-zinc-400 hover:text-cyan-400 transition-colors text-sm font-medium"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Seguir comprando
-            </Link>
-          </div>
-        </div>
-      </div>
-
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black pt-20">
       {/* Contenido */}
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Header integrado */}
+        <div className="flex items-center justify-between mb-8 pb-6 border-b border-zinc-900">
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-zinc-400 text-transparent bg-clip-text">
+              Carrito
+            </h1>
+            <p className="text-zinc-500 text-xs mt-1">
+              {items.length} {items.length === 1 ? "producto" : "productos"}
+            </p>
+          </div>
+          
+          <Link 
+            href="/"
+            className="flex items-center gap-2 text-zinc-500 hover:text-cyan-400 transition-colors text-sm font-medium group"
+          >
+            <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Seguir comprando
+          </Link>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Lista de productos */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="group relative bg-gradient-to-br from-zinc-900 to-zinc-900/50 rounded-2xl border border-zinc-800 p-6 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/10"
+                className="group bg-zinc-900/50 rounded-xl border border-zinc-800/50 p-6 hover:border-cyan-500/30 transition-all duration-300"
               >
                 <div className="flex gap-6 items-center">
                   {/* Imagen */}
-                  <div className="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 bg-zinc-800/30 rounded-xl p-3 flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="flex-shrink-0 w-24 h-24 bg-zinc-900 rounded-lg p-3 flex items-center justify-center border border-zinc-800 group-hover:border-cyan-500/20 transition-colors">
                     <img
                       src={item.imageURL}
                       alt={item.name}
-                      className="relative w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
                   {/* Info del producto */}
                   <div className="flex-1 min-w-0">
-                    <h2 className="font-bold text-white text-lg mb-2 truncate group-hover:text-cyan-400 transition-colors">
+                    <h2 className="font-semibold text-white text-lg mb-3 truncate">
                       {item.name}
                     </h2>
                     
-                    <div className="flex flex-wrap items-center gap-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500">
                       <div className="flex items-center gap-2">
-                        <span className="text-zinc-500">Precio:</span>
-                        <span className="text-cyan-400 font-bold">${item.price}</span>
+                        <span>Precio:</span>
+                        <span className="text-white font-semibold">${item.price}</span>
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        <span className="text-zinc-500">Cantidad:</span>
-                        <span className="text-white font-semibold">{item.quantity}</span>
+                        <span>Cantidad:</span>
+                        <span className="text-cyan-400 font-semibold">{item.quantity}</span>
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        <span className="text-zinc-500">Subtotal:</span>
+                        <span>Subtotal:</span>
                         <span className="text-white font-bold">
                           ${(item.price * item.quantity).toFixed(2)}
                         </span>
@@ -158,7 +155,7 @@ export default function CartPage() {
                   {/* Botón eliminar */}
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="flex-shrink-0 p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300 group/btn"
+                    className="flex-shrink-0 p-2 rounded-lg text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
                     title="Eliminar del carrito"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,41 +169,35 @@ export default function CartPage() {
 
           {/* Resumen de compra */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
+            <div className="sticky top-28 space-y-4">
               {/* Card de resumen */}
-              <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/50 rounded-2xl border border-zinc-800 p-6 space-y-4">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  Resumen de compra
+              <div className="bg-zinc-900/50 rounded-xl border border-zinc-800/50 p-6 space-y-6">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <div className="w-1 h-5 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full"></div>
+                  Resumen
                 </h3>
 
-                <div className="space-y-3 py-4 border-y border-zinc-800">
-                  <div className="flex justify-between text-zinc-400">
+                <div className="space-y-3 py-4 border-y border-zinc-800/50">
+                  <div className="flex justify-between text-zinc-500">
                     <span>Subtotal</span>
-                    <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+                    <span className="text-white font-medium">${totalPrice.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-zinc-400">
+                  <div className="flex justify-between text-zinc-500">
                     <span>Envío</span>
-                    <span className="font-semibold text-emerald-400">Gratis</span>
-                  </div>
-                  <div className="flex justify-between text-zinc-400">
-                    <span>Descuento</span>
-                    <span className="font-semibold">-$0.00</span>
+                    <span className="text-emerald-400 font-medium">Gratis</span>
                   </div>
                 </div>
 
-                <div className="flex justify-between items-baseline pt-2">
+                <div className="flex justify-between items-baseline">
                   <span className="text-lg font-semibold text-white">Total</span>
-                  <span className="text-3xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+                  <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
                     ${totalPrice.toFixed(2)}
                   </span>
                 </div>
 
                 {/* Mensaje de error */}
                 {error && (
-                  <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
                     <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -218,10 +209,10 @@ export default function CartPage() {
                 <button
                   onClick={handleCheckout}
                   disabled={loading}
-                  className={`w-full px-6 py-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 ${
+                  className={`w-full px-6 py-3.5 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                     loading
-                      ? "bg-zinc-700 cursor-not-allowed"
-                      : "bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105"
+                      ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 hover:shadow-lg hover:shadow-cyan-500/25"
                   }`}
                 >
                   {loading ? (
@@ -234,17 +225,17 @@ export default function CartPage() {
                     </>
                   ) : (
                     <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
                       Finalizar compra
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
                     </>
                   )}
                 </button>
               </div>
 
               {/* Info adicional */}
-              <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-4 space-y-2 text-xs text-zinc-500">
+              <div className="bg-zinc-900/30 rounded-lg border border-zinc-800/30 p-4 space-y-2.5 text-sm text-zinc-500">
                 <div className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
