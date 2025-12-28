@@ -1,29 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export const dynamic = 'force-dynamic';
+import { ProductCard } from "./components/ProductCard";
+import { getProducts } from "./services/products";
+import { Product } from "./types/product";
 
 export default async function Page() {
-  const API = process.env.NEXT_PUBLIC_BACKEND_URL!;
-
-  const response = await fetch(`${API}/products`, {
-    cache: 'no-store',
-  });
-
-  const products = await response.json();
+  const products: Product[] = await getProducts();
 
   return (
-    <div>
-      <h1>Products</h1>
+    <main className="min-h-screen bg-black px-6 py-10">
+      <h1 className="text-3xl font-bold text-white mb-8">
+        Productos
+      </h1>
 
-      {Array.isArray(products) &&
-        products.map((product: any) => (
-          <div key={product.id}>
-            <h2>{product.name}</h2>
-            <img src={product.imageURL} alt={product.name} width={200} />
-            <h3>${product.price}</h3>
-            <p>{product.description}</p>
-          </div>
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
-    </div>
+      </div>
+    </main>
   );
 }
