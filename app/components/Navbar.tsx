@@ -35,7 +35,7 @@ export function Navbar() {
 
           <div className="flex flex-col">
             <span className="text-2xl md:text-3xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 group-hover:from-cyan-300 group-hover:via-purple-300 group-hover:to-pink-300 text-transparent bg-clip-text transition-all duration-300">
-              EnergyStore
+              RAYNIX ENERGY
             </span>
             <span className="text-[10px] md:text-xs text-zinc-500 font-bold tracking-widest uppercase">
               Premium Drinks
