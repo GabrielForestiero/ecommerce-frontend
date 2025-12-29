@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Navbar } from "./components/Navbar";
+import { teko } from "./fonts";
 
 export default function RootLayout({
   children,
@@ -7,7 +8,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es"  className={teko.variable}>
       <body>
         <Navbar />
         {children}

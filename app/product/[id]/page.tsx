@@ -108,7 +108,7 @@ export default async function ProductPage({ params }: Props) {
 
             {/* Descripción */}
             <p className="text-zinc-400 text-lg leading-relaxed">
-              {product.description}
+              {product.longDescription}
             </p>
 
             {/* Separador */}
@@ -154,12 +154,12 @@ export default async function ProductPage({ params }: Props) {
             </div>
 
             {/* Info adicional */}
-            <div className="mt-6 p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800 space-y-4">
-              <h3 className="font-bold text-white flex items-center gap-2">
+            {/* <div className="mt-6 p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800 space-y-4"> */}
+              {/* <h3 className="font-bold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Información del producto
+                </svg> */}
+                {/* Información del producto
               </h3>
               <ul className="space-y-3 text-sm text-zinc-400">
                 <li className="flex items-start gap-3">
@@ -178,11 +178,12 @@ export default async function ProductPage({ params }: Props) {
                   <span className="text-cyan-400 mt-0.5">✓</span>
                   <span>Pago seguro con encriptación SSL</span>
                 </li>
-              </ul>
-            </div>
+              </ul> */}
+            {/* </div> */}
           </div>
         </div>
       </div>
+      
     </main>
   );
 }
