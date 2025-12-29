@@ -6,6 +6,7 @@ import { useAuthStore } from "../store/authStore";
 export default function AuthNav() {
   const { token, user, logout } = useAuthStore();
 
+  // ❌ NO logueado
   if (!token) {
     return (
       <>
@@ -26,8 +27,16 @@ export default function AuthNav() {
     );
   }
 
+  // ✅ LOGUEADO
   return (
     <>
+      <Link
+        href="/my-orders"
+        className="text-zinc-400 hover:text-cyan-400 font-bold"
+      >
+        Mis órdenes
+      </Link>
+
       <span className="text-zinc-400 text-sm font-bold">
         👤 {user?.name || user?.email || "Usuario"}
       </span>
