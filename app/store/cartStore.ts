@@ -9,10 +9,16 @@ export type CartItem = Product & {
 type CartState = {
   items: CartItem[];
   hasHydrated: boolean;
+  isDrawerOpen: boolean;
+  
   setHasHydrated: (state: boolean) => void;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  toggleDrawer: () => void;
 
   addToCart: (product: Product) => void;
   removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void; // 🆕 Nueva función
   clearCart: () => void;
   totalItems: () => number;
   totalPrice: () => number;
@@ -23,9 +29,14 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       hasHydrated: false,
+      isDrawerOpen: false,
 
       setHasHydrated: (state) =>
         set({ hasHydrated: state }),
+
+      openDrawer: () => set({ isDrawerOpen: true }),
+      closeDrawer: () => set({ isDrawerOpen: false }),
+      toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
 
       addToCart: (product) =>
         set((state) => {
@@ -43,6 +54,7 @@ export const useCartStore = create<CartState>()(
                     }
                   : item
               ),
+              isDrawerOpen: true,
             };
           }
 
@@ -51,6 +63,7 @@ export const useCartStore = create<CartState>()(
               ...state.items,
               { ...product, quantity: 1 },
             ],
+            isDrawerOpen: true,
           };
         }),
 
@@ -58,6 +71,16 @@ export const useCartStore = create<CartState>()(
         set((state) => ({
           items: state.items.filter(
             (item) => item.id !== id
+          ),
+        })),
+
+      // 🆕 Nueva función para actualizar cantidad
+      updateQuantity: (id, quantity) =>
+        set((state) => ({
+          items: state.items.map((item) =>
+            item.id === id
+              ? { ...item, quantity: Math.max(1, quantity) }
+              : item
           ),
         })),
 

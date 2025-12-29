@@ -1,255 +1,387 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Script from "next/script";
 import Link from "next/link";
-import { useCartStore } from "../store/cartStore";
+import { useCartStore } from "@/app/store/cartStore";
 import { createOrder } from "../services/orders";
 
 export default function CartPage() {
-  const router = useRouter();
-
   const items = useCartStore((state) => state.items);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
   const totalPrice = useCartStore((state) => state.totalPrice());
   const hasHydrated = useCartStore((state) => state.hasHydrated);
-  const clearCart = useCartStore((state) => state.clearCart);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mpReady, setMpReady] = useState(false);
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
-  async function handleCheckout() {
+  const BANK_DATA = {
+    cvu: "0000003100012345678901",
+    alias: "TIENDA.ONLINE.MP",
+    titular: "Tu Nombre o Razón Social",
+    email: "pagos@tutienda.com"
+  };
+
+  async function createPreference(items: unknown[], orderId: string) {
+    const res = await fetch("http://localhost:3000/api/mercadopago/preference", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items, orderId }),
+    });
+
+    if (!res.ok) throw new Error("Error creando preference");
+    return res.json();
+  }
+
+  async function handleInitiateCheckout() {
     try {
       setLoading(true);
       setError(null);
 
-      const order = await createOrder(items);
-
-      clearCart();
-
-      router.push(`/checkout/success?orderId=${order.id}`);
+      const { orderId } = await createOrder(items);
+      setOrderId(orderId);
+      setShowPaymentMethods(true);
+      
+      console.log("🧾 Orden creada:", orderId);
     } catch (err) {
-      setError("No se pudo crear la orden. Por favor intenta nuevamente.");
+      console.error(err);
+      setError("Error al crear la orden. Intenta nuevamente.");
     } finally {
       setLoading(false);
     }
   }
 
-  // Estado de carga
+  async function handlePaymentMethod(method: string) {
+    setSelectedMethod(method);
+
+    if (method === "mercadopago") {
+      try {
+        setLoading(true);
+        
+        if (!mpReady) {
+          setError("Cargando Mercado Pago, intentá nuevamente.");
+          return;
+        }
+
+        const { preferenceId } = await createPreference(items, orderId!);
+
+        // @ts-expect-error SDK global
+        const mp = new window.MercadoPago(
+          process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!,
+          { locale: "es-AR" }
+        );
+
+        mp.checkout({
+          preference: { id: preferenceId },
+          autoOpen: true,
+        });
+
+      } catch (err) {
+        console.error(err);
+        setError("No se pudo iniciar el pago. Intenta nuevamente.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  }
+
   if (!hasHydrated) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black flex items-center justify-center pt-20">
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-zinc-900 border border-cyan-500/20 animate-pulse">
-            <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <p className="text-zinc-300 text-lg font-medium">Cargando carrito...</p>
-        </div>
+      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-gray-600">Cargando carrito...</div>
       </main>
     );
   }
 
-  // Carrito vacío
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black flex items-center justify-center px-6 pt-20">
-        <div className="text-center space-y-6 max-w-md">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-zinc-900 border border-cyan-500/20">
-            <svg className="w-12 h-12 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-white">Tu carrito está vacío</h2>
-            <p className="text-zinc-400">Agrega productos para comenzar tu compra</p>
-          </div>
-
-          <Link 
-            href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold hover:from-cyan-400 hover:to-purple-500 transition-all duration-200"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Ir a la tienda
+      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold text-gray-900">Tu carrito está vacío</h2>
+          <Link href="/" className="text-blue-600 underline hover:text-blue-700">
+            Volver a la tienda
           </Link>
         </div>
       </main>
     );
   }
 
-  // Carrito con productos
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-black pt-20">
-      {/* Contenido */}
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20">
+      <Script
+        src="https://sdk.mercadopago.com/js/v2"
+        strategy="afterInteractive"
+        onLoad={() => setMpReady(true)}
+      />
+
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Header integrado */}
-        <div className="flex items-center justify-between mb-8 pb-6 border-b border-zinc-900">
-          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-zinc-400 text-transparent bg-clip-text">
-              Carrito
-            </h1>
-            <p className="text-zinc-500 text-xs mt-1">
-              {items.length} {items.length === 1 ? "producto" : "productos"}
-            </p>
-          </div>
-          
-          <Link 
-            href="/"
-            className="flex items-center gap-2 text-zinc-500 hover:text-cyan-400 transition-colors text-sm font-medium group"
-          >
-            <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Seguir comprando
-          </Link>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Tu Carrito</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Lista de productos */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Productos */}
+          <div className="lg:col-span-2 space-y-5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="group bg-zinc-900/50 rounded-xl border border-zinc-800/50 p-6 hover:border-cyan-500/30 transition-all duration-300"
+                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 flex gap-8 items-center hover:shadow-md transition-shadow"
               >
-                <div className="flex gap-6 items-center">
-                  {/* Imagen */}
-                  <div className="flex-shrink-0 w-24 h-24 bg-zinc-900 rounded-lg p-3 flex items-center justify-center border border-zinc-800 group-hover:border-cyan-500/20 transition-colors">
-                    <img
-                      src={item.imageURL}
-                      alt={item.name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
+                <div className="w-36 h-36 bg-gray-50 rounded-xl flex items-center justify-center p-3">
+                  <img
+                    src={item.imageURL}
+                    alt={item.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
 
-                  {/* Info del producto */}
-                  <div className="flex-1 min-w-0">
-                    <h2 className="font-semibold text-white text-lg mb-3 truncate">
-                      {item.name}
-                    </h2>
-                    
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500">
-                      <div className="flex items-center gap-2">
-                        <span>Precio:</span>
-                        <span className="text-white font-semibold">${item.price}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <span>Cantidad:</span>
-                        <span className="text-cyan-400 font-semibold">{item.quantity}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <span>Subtotal:</span>
-                        <span className="text-white font-bold">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </span>
-                      </div>
+                <div className="flex-1">
+                  <h2 className="text-gray-900 font-bold text-xl mb-3">{item.name}</h2>
+                  <p className="text-gray-600 text-lg mb-3">
+                    ${item.price} c/u
+                  </p>
+                  
+                  {/* Control de cantidad */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-gray-600 font-medium">Cantidad:</span>
+                    <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+                      <button
+                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        className="w-8 h-8 flex items-center justify-center bg-white rounded-md hover:bg-gray-200 transition-colors font-bold text-gray-700"
+                      >
+                        −
+                      </button>
+                      <span className="w-12 text-center font-semibold text-gray-900">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center bg-white rounded-md hover:bg-gray-200 transition-colors font-bold text-gray-700"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
-
-                  {/* Botón eliminar */}
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="flex-shrink-0 p-2 rounded-lg text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                    title="Eliminar del carrito"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  
+                  <p className="text-gray-900 font-semibold text-lg">
+                    Subtotal: ${(item.price * item.quantity).toFixed(2)}
+                  </p>
                 </div>
+
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-red-500 hover:text-red-600 font-semibold px-5 py-3 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  Eliminar
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Resumen de compra */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-28 space-y-4">
-              {/* Card de resumen */}
-              <div className="bg-zinc-900/50 rounded-xl border border-zinc-800/50 p-6 space-y-6">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <div className="w-1 h-5 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full"></div>
-                  Resumen
-                </h3>
+          {/* Resumen y Métodos de Pago */}
+          <div className="space-y-6">
+            {/* Resumen */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Resumen del pedido</h3>
 
-                <div className="space-y-3 py-4 border-y border-zinc-800/50">
-                  <div className="flex justify-between text-zinc-500">
-                    <span>Subtotal</span>
-                    <span className="text-white font-medium">${totalPrice.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-zinc-500">
-                    <span>Envío</span>
-                    <span className="text-emerald-400 font-medium">Gratis</span>
-                  </div>
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal</span>
+                  <span className="font-semibold">${totalPrice.toFixed(2)}</span>
                 </div>
-
-                <div className="flex justify-between items-baseline">
-                  <span className="text-lg font-semibold text-white">Total</span>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+                <div className="border-t border-gray-200 pt-3 flex justify-between">
+                  <span className="text-lg font-bold text-gray-900">Total</span>
+                  <span className="text-2xl font-bold text-blue-600">
                     ${totalPrice.toFixed(2)}
                   </span>
                 </div>
+              </div>
 
-                {/* Mensaje de error */}
-                {error && (
-                  <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{error}</span>
-                  </div>
-                )}
+              {error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-4 text-sm border border-red-200">
+                  {error}
+                </div>
+              )}
 
-                {/* Botón de checkout */}
+              {!showPaymentMethods && (
                 <button
-                  onClick={handleCheckout}
+                  onClick={handleInitiateCheckout}
                   disabled={loading}
-                  className={`w-full px-6 py-3.5 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${
                     loading
-                      ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 hover:shadow-lg hover:shadow-cyan-500/25"
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
                   }`}
                 >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Procesando...
-                    </>
-                  ) : (
-                    <>
-                      Finalizar compra
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </>
-                  )}
+                  {loading ? "Procesando..." : "Continuar con el pago"}
                 </button>
-              </div>
-
-              {/* Info adicional */}
-              <div className="bg-zinc-900/30 rounded-lg border border-zinc-800/30 p-4 space-y-2.5 text-sm text-zinc-500">
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  <span>Compra 100% segura</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Garantía de devolución</span>
-                </div>
-              </div>
+              )}
             </div>
+
+            {/* MÉTODOS DE PAGO */}
+            {showPaymentMethods && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">
+                  Elegí tu método de pago
+                </h3>
+
+                <div className="space-y-4">
+                  {/* Mercado Pago */}
+                  <button
+                    onClick={() => handlePaymentMethod("mercadopago")}
+                    disabled={loading}
+                    className={`w-full p-5 rounded-xl border-2 transition-all ${
+                      selectedMethod === "mercadopago"
+                        ? "border-blue-500 bg-blue-50 shadow-md"
+                        : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl flex items-center justify-center p-3 shadow-sm">
+                        <img 
+                          src="/mp.svg"
+                          alt="Mercado Pago"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className="text-gray-900 font-bold text-lg">Mercado Pago</p>
+                        <p className="text-gray-600 text-sm mt-1">
+                          Tarjetas, efectivo o saldo
+                        </p>
+                      </div>
+                      {selectedMethod === "mercadopago" && (
+                        <div className="text-blue-600 text-2xl">✓</div>
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Transferencia */}
+                  <button
+                    onClick={() => handlePaymentMethod("transferencia")}
+                    className={`w-full p-5 rounded-xl border-2 transition-all ${
+                      selectedMethod === "transferencia"
+                        ? "border-purple-500 bg-purple-50 shadow-md"
+                        : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl shadow-sm">
+                        💳
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className="text-gray-900 font-bold text-lg">Transferencia Bancaria</p>
+                        <p className="text-gray-600 text-sm mt-1">
+                          CVU/CBU + comprobante
+                        </p>
+                      </div>
+                      {selectedMethod === "transferencia" && (
+                        <div className="text-purple-600 text-2xl">✓</div>
+                      )}
+                    </div>
+                  </button>
+                </div>
+
+                {/* DATOS DE TRANSFERENCIA */}
+                {selectedMethod === "transferencia" && (
+                  <div className="mt-6 p-5 bg-purple-50 border-2 border-purple-200 rounded-xl space-y-5">
+                    <div className="flex items-start gap-3">
+                      <div className="text-3xl">📋</div>
+                      <div>
+                        <h4 className="text-gray-900 font-bold text-lg mb-1">
+                          Datos para transferir
+                        </h4>
+                        <p className="text-gray-600 text-sm">
+                          Realizá la transferencia y envianos el comprobante
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3 bg-white p-5 rounded-xl border border-purple-200">
+                      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                        <span className="text-gray-600 font-medium">CVU:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-900 font-mono text-sm">
+                            {BANK_DATA.cvu}
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(BANK_DATA.cvu);
+                              alert("✅ CVU copiado");
+                            }}
+                            className="text-blue-600 hover:text-blue-700 px-2 py-1 hover:bg-blue-50 rounded"
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                        <span className="text-gray-600 font-medium">Alias:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-900 font-mono font-semibold">
+                            {BANK_DATA.alias}
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(BANK_DATA.alias);
+                              alert("✅ Alias copiado");
+                            }}
+                            className="text-blue-600 hover:text-blue-700 px-2 py-1 hover:bg-blue-50 rounded"
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between pb-3 border-b border-gray-200">
+                        <span className="text-gray-600 font-medium">Titular:</span>
+                        <span className="text-gray-900 font-semibold">{BANK_DATA.titular}</span>
+                      </div>
+                      
+                      <div className="flex justify-between pt-2">
+                        <span className="text-gray-900 font-bold text-lg">Monto a transferir:</span>
+                        <span className="text-purple-600 font-bold text-2xl">
+                          ${totalPrice.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="bg-yellow-50 border-2 border-yellow-300 p-5 rounded-xl space-y-3">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">📧</span>
+                        <div className="flex-1">
+                          <p className="text-yellow-900 font-bold mb-2">
+                            Enviá el comprobante por email
+                          </p>
+                          <a 
+                            href={`mailto:${BANK_DATA.email}?subject=Comprobante Orden ${orderId}&body=Adjunto comprobante de pago para la orden ${orderId}%0D%0A%0D%0AMonto: ${totalPrice.toFixed(2)}`}
+                            className="inline-block bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-4 py-2 rounded-lg transition-colors"
+                          >
+                            {BANK_DATA.email}
+                          </a>
+                          <p className="text-yellow-800 text-xs mt-3">
+                            <strong>Asunto:</strong> Comprobante Orden {orderId}
+                          </p>
+                          <p className="text-yellow-800 text-xs mt-1">
+                            Adjuntá una foto o captura del comprobante
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-center pt-2">
+                      <p className="text-gray-600 text-sm">
+                        Tu orden será procesada una vez confirmemos el pago
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

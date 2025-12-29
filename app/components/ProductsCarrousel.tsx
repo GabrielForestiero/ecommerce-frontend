@@ -81,9 +81,7 @@ export function ProductsCarousel({ products }: ProductsCarouselProps) {
             </div>
           </div>
           
-          <p className="text-gray-600 text-sm md:text-base">
-            {products.length} bebidas energéticas premium
-          </p>
+        
         </div>
       </div>
 
