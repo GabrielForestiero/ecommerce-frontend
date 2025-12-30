@@ -11,13 +11,6 @@ type SearchParams = {
   preference_id?: string;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined");
-}
-
-
 export default function CheckoutSuccess({
   searchParams,
 }: {
@@ -42,7 +35,7 @@ export default function CheckoutSuccess({
       }
 
       try {
-          const res = await fetch(`${API_URL}/orders/from-mp`, {
+        const res = await fetch("http://localhost:3000/orders/from-mp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
