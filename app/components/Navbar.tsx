@@ -23,7 +23,7 @@ export function Navbar() {
           <img
             src="/products/logosvg.svg"
             alt="Logo"
-            className="w-12 h-12 object-contain"
+            className="w-30 h-30 object-contain"
           />
           <div className="flex flex-col">
             <span className="text-2xl font-black text-white">
@@ -36,7 +36,7 @@ export function Navbar() {
         </Link>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-6">
 
           {/* LINKS */}
           <Link
@@ -45,10 +45,9 @@ export function Navbar() {
           >
             Productos
           </Link>
-
           <Link
-            href="/about"
-            className="hidden md:block text-zinc-400 hover:text-purple-400 font-bold"
+            href="/nosotros"
+            className="hidden md:block text-zinc-400 hover:text-cyan-400 font-bold"
           >
             Nosotros
           </Link>
@@ -59,30 +58,30 @@ export function Navbar() {
           </div>
 
           {/* 🛒 CART (NO TOCADO) */}
-          <Link
-            href="/cart"
-            className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-cyan-400 transition"
-          >
-            <svg
-              className="w-6 h-6 text-zinc-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
+      <Link
+  href="/cart"
+  className="relative flex items-center justify-center"
+>
+  <svg
+    className="w-7 h-7 text-white hover:text-cyan-400 transition"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2.5}
+      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+    />
+  </svg>
 
-            {hasHydrated && totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-cyan-500 text-black text-xs font-black rounded-full px-2">
-                {totalItems}
-              </span>
-            )}
-          </Link>
+  {hasHydrated && totalItems > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+      {totalItems}
+    </span>
+  )}
+</Link>
         </div>
       </div>
     </nav>

@@ -5,11 +5,26 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "../store/authStore";
 import { getMyOrders } from "../services/orders";
 
+type Product = {
+  id: string;
+  name: string;
+  imageURL: string;
+  price: number;
+};
+
+type OrderItem = {
+  id: string;
+  quantity: number;
+  price: number;
+  product: Product;
+};
+
 type Order = {
   id: string;
   total: number;
   status: "PENDING" | "PAID" | "FAILED";
   createdAt: string;
+  items: OrderItem[];
 };
 
 export default function MyOrdersPage() {
@@ -34,7 +49,7 @@ export default function MyOrdersPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center text-zinc-400">
+      <main className="min-h-screen bg-white flex items-center justify-center text-zinc-600">
         Cargando tus órdenes...
       </main>
     );
@@ -42,53 +57,100 @@ export default function MyOrdersPage() {
 
   if (error) {
     return (
-      <main className="min-h-screen flex items-center justify-center text-red-400">
+      <main className="min-h-screen bg-white flex items-center justify-center text-red-500">
         {error}
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-black pt-28 px-6">
+    <main className="min-h-screen bg-white pt-28 px-6 pb-12">
       <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-black text-white">
+        <h1 className="text-3xl font-black text-black">
           Mis órdenes
         </h1>
 
         {orders.length === 0 && (
-          <p className="text-zinc-400">
-            Todavía no realizaste ninguna compra.
-          </p>
+          <div className="text-center py-12">
+            <p className="text-zinc-600 text-lg">
+              Todavía no realizaste ninguna compra.
+            </p>
+          </div>
         )}
 
         {orders.map((order) => (
           <div
             key={order.id}
-            className="bg-zinc-900 rounded-xl p-6 border border-zinc-800"
+            className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-mono text-sm text-zinc-400">
-                #{order.id}
-              </span>
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-4 pb-4 border-b border-zinc-200">
+              <div>
+                <p className="text-sm text-zinc-500">
+                  {new Date(order.createdAt).toLocaleDateString('es-AR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
 
               <span
-                className={`text-sm font-bold ${
+                className={`text-sm font-bold px-3 py-1 rounded-full ${
                   order.status === "PAID"
-                    ? "text-emerald-400"
+                    ? "bg-emerald-100 text-emerald-700"
                     : order.status === "FAILED"
-                    ? "text-red-400"
-                    : "text-yellow-400"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
                 }`}
               >
-                {order.status}
+                {order.status === "PAID" ? "PAGADO" : order.status === "FAILED" ? "FALLIDO" : "PENDIENTE"}
               </span>
             </div>
 
-            <div className="flex justify-between text-zinc-300">
-              <span>
-                {new Date(order.createdAt).toLocaleDateString()}
+            {/* PRODUCTOS */}
+            <div className="space-y-3 mb-4">
+              {order.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-4"
+                >
+                  {/* IMAGEN */}
+                  <img
+                    src={item.product.imageURL}
+                    alt={item.product.name}
+                    className="w-16 h-16 object-cover rounded-lg border border-zinc-200"
+                  />
+
+                  {/* INFO */}
+                  <div className="flex-1">
+                    <h3 className="font-bold text-black">
+                      {item.product.name}
+                    </h3>
+                    <p className="text-sm text-zinc-600">
+                      Cantidad: {item.quantity}
+                    </p>
+                  </div>
+
+                  {/* PRECIO */}
+                  <div className="text-right">
+                    <p className="font-bold text-black">
+                      ${item.price * item.quantity}
+                    </p>
+                    <p className="text-sm text-zinc-500">
+                      ${item.price} c/u
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* TOTAL */}
+            <div className="flex justify-between items-center pt-4 border-t border-zinc-200">
+              <span className="text-lg font-bold text-black">
+                Total
               </span>
-              <span className="font-bold">
+              <span className="text-2xl font-black text-black">
                 ${order.total}
               </span>
             </div>

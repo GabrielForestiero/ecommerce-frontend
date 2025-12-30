@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Script from "next/script";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/store/cartStore";
 import { createOrder } from "../services/orders";
 
 export default function CartPage() {
+  const router = useRouter();
   const items = useCartStore((state) => state.items);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
   const totalPrice = useCartStore((state) => state.totalPrice());
   const hasHydrated = useCartStore((state) => state.hasHydrated);
 
@@ -18,14 +21,15 @@ export default function CartPage() {
   const [mpReady, setMpReady] = useState(false);
   const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
-  const BANK_DATA = {
-    cvu: "0000003100012345678901",
-    alias: "TIENDA.ONLINE.MP",
-    titular: "Tu Nombre o Razón Social",
-    email: "pagos@tutienda.com"
-  };
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   async function createPreference(items: unknown[], orderId: string) {
     const res = await fetch("http://localhost:3000/api/mercadopago/preference", {
@@ -38,37 +42,31 @@ export default function CartPage() {
     return res.json();
   }
 
-  async function handleInitiateCheckout() {
+  function handleShowPaymentMethods() {
+    setShowPaymentMethods(true);
+  }
+
+  async function handleFinalizeOrder() {
+    if (!selectedMethod) {
+      setError("Por favor seleccioná un método de pago");
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
       const { orderId } = await createOrder(items);
-      setOrderId(orderId);
-      setShowPaymentMethods(true);
       
       console.log("🧾 Orden creada:", orderId);
-    } catch (err) {
-      console.error(err);
-      setError("Error al crear la orden. Intenta nuevamente.");
-    } finally {
-      setLoading(false);
-    }
-  }
 
-  async function handlePaymentMethod(method: string) {
-    setSelectedMethod(method);
-
-    if (method === "mercadopago") {
-      try {
-        setLoading(true);
-        
+      if (selectedMethod === "mercadopago") {
         if (!mpReady) {
           setError("Cargando Mercado Pago, intentá nuevamente.");
           return;
         }
 
-        const { preferenceId } = await createPreference(items, orderId!);
+        const { preferenceId } = await createPreference(items, orderId);
 
         // @ts-expect-error SDK global
         const mp = new window.MercadoPago(
@@ -76,17 +74,32 @@ export default function CartPage() {
           { locale: "es-AR" }
         );
 
+        setToastMessage(`¡Orden ${orderId} creada exitosamente!`);
+        setShowToast(true);
+
         mp.checkout({
           preference: { id: preferenceId },
           autoOpen: true,
         });
 
-      } catch (err) {
-        console.error(err);
-        setError("No se pudo iniciar el pago. Intenta nuevamente.");
-      } finally {
-        setLoading(false);
+        // NO limpiamos el carrito en Mercado Pago por si el usuario cancela
+
+      } else if (selectedMethod === "transferencia") {
+        // Guardar el total antes de limpiar
+        const totalAmount = totalPrice;
+        
+        // Limpiar el carrito solo para transferencia
+        clearCart();
+        
+        // Redirigir a página de confirmación
+        router.push(`/order-confirmation?orderId=${orderId}&amount=${totalAmount.toFixed(2)}`);
       }
+
+    } catch (err) {
+      console.error(err);
+      setError("Error al procesar la orden. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -119,6 +132,25 @@ export default function CartPage() {
         onLoad={() => setMpReady(true)}
       />
 
+      {/* TOAST NOTIFICATION */}
+      {showToast && (
+        <div className="fixed top-6 right-6 z-50 animate-slide-in">
+          <div className="bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 min-w-[350px]">
+            <div className="text-3xl">✅</div>
+            <div className="flex-1">
+              <p className="font-bold text-lg">¡Orden creada exitosamente!</p>
+              <p className="text-green-100 text-sm mt-1">{toastMessage}</p>
+            </div>
+            <button 
+              onClick={() => setShowToast(false)}
+              className="text-white hover:text-green-200 text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto px-6 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Tu Carrito</h1>
 
@@ -144,7 +176,6 @@ export default function CartPage() {
                     ${item.price} c/u
                   </p>
                   
-                  {/* Control de cantidad */}
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-gray-600 font-medium">Cantidad:</span>
                     <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
@@ -208,15 +239,10 @@ export default function CartPage() {
 
               {!showPaymentMethods && (
                 <button
-                  onClick={handleInitiateCheckout}
-                  disabled={loading}
-                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${
-                    loading
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
-                  }`}
+                  onClick={handleShowPaymentMethods}
+                  className="w-full py-4 rounded-xl font-semibold text-lg transition-all bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
                 >
-                  {loading ? "Procesando..." : "Continuar con el pago"}
+                  Continuar con el pago
                 </button>
               )}
             </div>
@@ -228,11 +254,9 @@ export default function CartPage() {
                   Elegí tu método de pago
                 </h3>
 
-                <div className="space-y-4">
-                  {/* Mercado Pago */}
+                <div className="space-y-4 mb-6">
                   <button
-                    onClick={() => handlePaymentMethod("mercadopago")}
-                    disabled={loading}
+                    onClick={() => setSelectedMethod("mercadopago")}
                     className={`w-full p-5 rounded-xl border-2 transition-all ${
                       selectedMethod === "mercadopago"
                         ? "border-blue-500 bg-blue-50 shadow-md"
@@ -259,9 +283,8 @@ export default function CartPage() {
                     </div>
                   </button>
 
-                  {/* Transferencia */}
                   <button
-                    onClick={() => handlePaymentMethod("transferencia")}
+                    onClick={() => setSelectedMethod("transferencia")}
                     className={`w-full p-5 rounded-xl border-2 transition-all ${
                       selectedMethod === "transferencia"
                         ? "border-purple-500 bg-purple-50 shadow-md"
@@ -285,106 +308,38 @@ export default function CartPage() {
                   </button>
                 </div>
 
-                {/* DATOS DE TRANSFERENCIA */}
-                {selectedMethod === "transferencia" && (
-                  <div className="mt-6 p-5 bg-purple-50 border-2 border-purple-200 rounded-xl space-y-5">
-                    <div className="flex items-start gap-3">
-                      <div className="text-3xl">📋</div>
-                      <div>
-                        <h4 className="text-gray-900 font-bold text-lg mb-1">
-                          Datos para transferir
-                        </h4>
-                        <p className="text-gray-600 text-sm">
-                          Realizá la transferencia y envianos el comprobante
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3 bg-white p-5 rounded-xl border border-purple-200">
-                      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                        <span className="text-gray-600 font-medium">CVU:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-900 font-mono text-sm">
-                            {BANK_DATA.cvu}
-                          </span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(BANK_DATA.cvu);
-                              alert("✅ CVU copiado");
-                            }}
-                            className="text-blue-600 hover:text-blue-700 px-2 py-1 hover:bg-blue-50 rounded"
-                          >
-                            📋
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                        <span className="text-gray-600 font-medium">Alias:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-900 font-mono font-semibold">
-                            {BANK_DATA.alias}
-                          </span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(BANK_DATA.alias);
-                              alert("✅ Alias copiado");
-                            }}
-                            className="text-blue-600 hover:text-blue-700 px-2 py-1 hover:bg-blue-50 rounded"
-                          >
-                            📋
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-between pb-3 border-b border-gray-200">
-                        <span className="text-gray-600 font-medium">Titular:</span>
-                        <span className="text-gray-900 font-semibold">{BANK_DATA.titular}</span>
-                      </div>
-                      
-                      <div className="flex justify-between pt-2">
-                        <span className="text-gray-900 font-bold text-lg">Monto a transferir:</span>
-                        <span className="text-purple-600 font-bold text-2xl">
-                          ${totalPrice.toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="bg-yellow-50 border-2 border-yellow-300 p-5 rounded-xl space-y-3">
-                      <div className="flex items-start gap-3">
-                        <span className="text-2xl">📧</span>
-                        <div className="flex-1">
-                          <p className="text-yellow-900 font-bold mb-2">
-                            Enviá el comprobante por email
-                          </p>
-                          <a 
-                            href={`mailto:${BANK_DATA.email}?subject=Comprobante Orden ${orderId}&body=Adjunto comprobante de pago para la orden ${orderId}%0D%0A%0D%0AMonto: ${totalPrice.toFixed(2)}`}
-                            className="inline-block bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-4 py-2 rounded-lg transition-colors"
-                          >
-                            {BANK_DATA.email}
-                          </a>
-                          <p className="text-yellow-800 text-xs mt-3">
-                            <strong>Asunto:</strong> Comprobante Orden {orderId}
-                          </p>
-                          <p className="text-yellow-800 text-xs mt-1">
-                            Adjuntá una foto o captura del comprobante
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-center pt-2">
-                      <p className="text-gray-600 text-sm">
-                        Tu orden será procesada una vez confirmemos el pago
-                      </p>
-                    </div>
-                  </div>
-                )}
+                <button
+                  onClick={handleFinalizeOrder}
+                  disabled={loading || !selectedMethod}
+                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${
+                    loading || !selectedMethod
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  {loading ? "Procesando..." : "Finalizar compra"}
+                </button>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+      `}</style>
     </main>
   );
 }

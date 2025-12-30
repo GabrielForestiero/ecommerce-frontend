@@ -63,11 +63,6 @@ export default async function ProductPage({ params }: Props) {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Columna izquierda - Imagen */}
           <div className="relative order-1">
-            {/* Badge flotante */}
-            <div className="absolute top-6 left-6 z-10 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white text-sm font-bold shadow-lg shadow-cyan-500/30 animate-pulse">
-              ⚡ Nuevo
-            </div>
-
             {/* Contenedor de imagen */}
             <div className="relative flex items-center justify-center py-8 lg:py-12">
               {/* Resplandor de fondo */}

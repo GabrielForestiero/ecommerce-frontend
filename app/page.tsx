@@ -499,9 +499,9 @@ export default async function Page() {
               {/* Precio y CTA */}
               <div className="flex items-center gap-4 pt-4">
                 <div>
-                  <div className="text-zinc-500 text-sm line-through">$4.99</div>
+                  <div className="text-zinc-500 text-sm line-through">2000</div>
                   <div className="text-3xl font-black text-white">
-                    $<span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">3.99</span>
+                    $<span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">1700</span>
                   </div>
                 </div>
                 <button className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white font-bold hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]">
