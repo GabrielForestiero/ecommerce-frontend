@@ -7,6 +7,14 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/store/cartStore";
 import { createOrder } from "../services/orders";
 
+
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+if (!API_URL) {
+  throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined");
+}
+
+
 export default function CartPage() {
   const router = useRouter();
   const items = useCartStore((state) => state.items);
@@ -32,7 +40,7 @@ export default function CartPage() {
   }, [showToast]);
 
   async function createPreference(items: unknown[], orderId: string) {
-    const res = await fetch("http://localhost:3000/api/mercadopago/preference", {
+      const res = await fetch(`${API_URL}/mercadopago/preference`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items, orderId }),
