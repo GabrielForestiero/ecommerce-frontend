@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/app/store/cartStore";
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+
 
 type SearchParams = {
   payment_id?: string;
@@ -35,7 +37,7 @@ export default function CheckoutSuccess({
       }
 
       try {
-        const res = await fetch("http://localhost:3000/orders/from-mp", {
+        const res = await fetch(`${API_URL}/orders/from-mp`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
