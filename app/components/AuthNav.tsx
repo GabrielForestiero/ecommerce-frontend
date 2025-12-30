@@ -9,10 +9,12 @@ export default function AuthNav() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cerrar dropdown al hacer click afuera
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -21,7 +23,6 @@ export default function AuthNav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ❌ NO logueado
   if (!token) {
     return (
       <>
@@ -32,7 +33,7 @@ export default function AuthNav() {
           Iniciar sesión
         </Link>
 
-         <Link
+        <Link
           href="/register"
           className="px-5 py-2.5 rounded-lg bg-transparent border-2 border-cyan-500 hover:border-purple-500 text-white font-bold hover:bg-cyan-500/10 transition-all"
         >
@@ -42,7 +43,6 @@ export default function AuthNav() {
     );
   }
 
-  // ✅ LOGUEADO
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -66,7 +66,9 @@ export default function AuthNav() {
           {user?.name || user?.email || "Usuario"}
         </span>
         <svg
-          className={`w-4 h-4 text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-zinc-400 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -80,14 +82,11 @@ export default function AuthNav() {
         </svg>
       </button>
 
-      {/* DROPDOWN MENU */}
       {isOpen && (
         <div className="absolute right-0 mt-3 w-72 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden z-50">
-          
-          {/* HEADER CON USUARIO */}
           <div className="px-6 py-4 border-b border-zinc-800">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -106,14 +105,11 @@ export default function AuthNav() {
                 <p className="text-white font-bold">
                   {user?.name || "Usuario"}
                 </p>
-                <p className="text-zinc-500 text-sm">
-                  {user?.email || ""}
-                </p>
+                <p className="text-zinc-500 text-sm">{user?.email || ""}</p>
               </div>
             </div>
           </div>
 
-          {/* OPCIONES */}
           <div className="py-2">
             <Link
               href="/my-orders"

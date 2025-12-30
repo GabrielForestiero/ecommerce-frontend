@@ -1,8 +1,8 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useTexture, OrbitControls, Environment } from "@react-three/drei";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 
 function Can() {
@@ -14,12 +14,10 @@ function Can() {
     group.current.rotation.y += 0.002;
   });
 
-  /* ================= LATHE PROFILES ================= */
-
   const bottomProfile = new THREE.LatheGeometry(
     [
       new THREE.Vector2(0.0, 0.0),
-      new THREE.Vector2(0.30, 0.025),
+      new THREE.Vector2(0.3, 0.025),
       new THREE.Vector2(0.36, 0.06),
       new THREE.Vector2(0.425, 0.11),
       new THREE.Vector2(0.43, 0.15),
@@ -41,7 +39,6 @@ function Can() {
 
   return (
     <group ref={group}>
-      {/* ================= BODY ================= */}
       <mesh>
         <cylinderGeometry args={[0.43, 0.43, 1.8, 80, 1, false]} />
         <meshStandardMaterial
@@ -52,7 +49,6 @@ function Can() {
         />
       </mesh>
 
-      {/* ================= LABEL ================= */}
       <mesh>
         <cylinderGeometry args={[0.438, 0.438, 1.78, 80, 1, true]} />
         <meshStandardMaterial
@@ -63,7 +59,6 @@ function Can() {
         />
       </mesh>
 
-      {/* ================= TOP ================= */}
       <mesh position={[0, 0.83, 0]}>
         <primitive object={topProfile} />
         <meshStandardMaterial
@@ -73,7 +68,6 @@ function Can() {
         />
       </mesh>
 
-      {/* ================= PULL TAB ================= */}
       <mesh position={[0.075, 0.93, 0.17]}>
         <cylinderGeometry args={[0.065, 0.065, 0.014, 32]} />
         <meshStandardMaterial
@@ -101,7 +95,6 @@ function Can() {
         />
       </mesh>
 
-      {/* ================= BOTTOM ================= */}
       <mesh position={[0, -0.83, 0]} rotation={[Math.PI, 0, 0]}>
         <primitive object={bottomProfile} />
         <meshStandardMaterial
@@ -116,12 +109,12 @@ function Can() {
 
 export function HeroScene() {
   return (
-    <div className="w-full h-[50vh] md:h-[60vh] lg:h-screen min-h-[300px] max-h-[800px] touch-none">
+    <div className="w-full h-[50vh] md:h-[60vh] lg:h-screen min-h-75 max-h-200 touch-none">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true }}
         dpr={[1, 2]}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: "100%", height: "100%" }}
       >
         <ambientLight intensity={0.35} />
         <directionalLight position={[5, 6, 4]} intensity={1.3} />
@@ -131,10 +124,7 @@ export function HeroScene() {
         <Environment preset="city" />
 
         <Can />
-        <OrbitControls 
-          enableZoom={false}
-          enablePan={false}
-        />
+        <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
     </div>
   );

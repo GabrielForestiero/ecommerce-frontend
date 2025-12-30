@@ -6,7 +6,7 @@ const API_URL =
   "http://localhost:3000";
 
 export async function createOrder(items: CartItem[]) {
-  // 👇 TOMAMOS EL TOKEN ACTUAL
+ 
   const { token } = useAuthStore.getState();
 
   const res = await fetch(`${API_URL}/orders`, {

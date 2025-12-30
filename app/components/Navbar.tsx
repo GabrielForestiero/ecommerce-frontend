@@ -5,15 +5,13 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useCartStore } from "../store/cartStore";
 
-// 🔐 Auth solo en cliente (CLAVE)
 const AuthNav = dynamic(() => import("./AuthNav"), {
   ssr: false,
 });
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  // 🛒 Cart (NO TOCADO)
+
   const totalItems = useCartStore((state) => state.totalItems());
   const hasHydrated = useCartStore((state) => state.hasHydrated);
 
@@ -21,8 +19,6 @@ export function Navbar() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-zinc-800/50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 lg:h-24 flex items-center justify-between">
-
-          {/* LOGO */}
           <Link href="/" className="flex items-center gap-2 md:gap-3">
             <img
               src="/products/logosvg.svg"
@@ -39,9 +35,7 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* RIGHT - DESKTOP */}
           <div className="hidden lg:flex items-center gap-6">
-            {/* LINKS */}
             <Link
               href="/"
               className="text-zinc-400 hover:text-cyan-400 font-bold transition-colors"
@@ -55,10 +49,8 @@ export function Navbar() {
               Nosotros
             </Link>
 
-            {/* 🔐 AUTH */}
             <AuthNav />
 
-            {/* 🛒 CART */}
             <Link
               href="/cart"
               className="relative flex items-center justify-center"
@@ -85,9 +77,7 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* RIGHT - MOBILE (Cart + Hamburger) */}
           <div className="flex lg:hidden items-center gap-3">
-            {/* 🛒 CART MOBILE */}
             <Link
               href="/cart"
               className="relative flex items-center justify-center"
@@ -113,14 +103,12 @@ export function Navbar() {
               )}
             </Link>
 
-            {/* HAMBURGER BUTTON */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white p-2 hover:bg-zinc-800 rounded-lg transition-colors"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
-                // X Icon
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -135,7 +123,6 @@ export function Navbar() {
                   />
                 </svg>
               ) : (
-                // Hamburger Icon
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -155,7 +142,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU */}
       <div
         className={`fixed top-16 md:top-20 left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-zinc-800/50 lg:hidden transition-all duration-300 ease-in-out z-40 ${
           isMenuOpen
@@ -164,7 +150,6 @@ export function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
-          {/* LINKS */}
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
@@ -180,14 +165,12 @@ export function Navbar() {
             Nosotros
           </Link>
 
-          {/* AUTH BUTTONS MOBILE */}
           <div className="pt-4 border-t border-zinc-800">
             <AuthNav />
           </div>
         </div>
       </div>
 
-      {/* OVERLAY */}
       {isMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"

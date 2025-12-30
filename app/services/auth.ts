@@ -50,5 +50,5 @@ export async function getMe(token: string) {
     throw new Error("Not authenticated");
   }
 
-  return res.json(); // { id, email, name }
+  return res.json(); 
 }

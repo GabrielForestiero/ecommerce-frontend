@@ -3,7 +3,6 @@
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-black">
-      {/* HERO SECTION */}
       <section className="relative pt-32 pb-12 px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <img
@@ -17,12 +16,12 @@ export default function AboutPage() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-zinc-600 leading-relaxed">
-            No somos una bebida más. Somos el impulso que necesitás para conquistar cada día.
+            No somos una bebida más. Somos el impulso que necesitás para
+            conquistar cada día.
           </p>
         </div>
       </section>
 
-      {/* VALORES */}
       <section className="relative py-12 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black text-center text-white mb-10">
@@ -30,7 +29,6 @@ export default function AboutPage() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Valor 1 */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-cyan-500 transition-all group">
               <div className="w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-all">
                 <svg
@@ -51,11 +49,12 @@ export default function AboutPage() {
                 Energía Sin Límites
               </h3>
               <p className="text-zinc-400 leading-relaxed text-sm">
-                Creemos en potenciar cada momento. Nuestras bebidas están diseñadas para darte el impulso que necesitás, cuando lo necesitás.
+                Creemos en potenciar cada momento. Nuestras bebidas están
+                diseñadas para darte el impulso que necesitás, cuando lo
+                necesitás.
               </p>
             </div>
 
-            {/* Valor 2 */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-purple-500 transition-all group">
               <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center mb-4 group-hover:bg-purple-500/20 transition-all">
                 <svg
@@ -76,11 +75,11 @@ export default function AboutPage() {
                 Innovación Constante
               </h3>
               <p className="text-zinc-400 leading-relaxed text-sm">
-                No nos quedamos quietos. Experimentamos con sabores únicos y buscamos constantemente mejorar nuestras fórmulas.
+                No nos quedamos quietos. Experimentamos con sabores únicos y
+                buscamos constantemente mejorar nuestras fórmulas.
               </p>
             </div>
 
-            {/* Valor 3 */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-pink-500 transition-all group">
               <div className="w-14 h-14 rounded-full bg-pink-500/10 flex items-center justify-center mb-4 group-hover:bg-pink-500/20 transition-all">
                 <svg
@@ -101,14 +100,14 @@ export default function AboutPage() {
                 Comunidad Auténtica
               </h3>
               <p className="text-zinc-400 leading-relaxed text-sm">
-                Raynix es más que una marca, es una tribu. Valoramos a cada persona que confía en nosotros para dar lo mejor.
+                Raynix es más que una marca, es una tribu. Valoramos a cada
+                persona que confía en nosotros para dar lo mejor.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* QUÉ NOS HACE DIFERENTES */}
       <section className="relative py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl font-black text-center text-white mb-16">
@@ -125,7 +124,9 @@ export default function AboutPage() {
                   Sabores Únicos e Intensos
                 </h3>
                 <p className="text-zinc-400">
-                  Nuestras fórmulas están diseñadas para impactar. Cada sabor cuenta una historia y ofrece una experiencia sensorial diferente.
+                  Nuestras fórmulas están diseñadas para impactar. Cada sabor
+                  cuenta una historia y ofrece una experiencia sensorial
+                  diferente.
                 </p>
               </div>
             </div>
@@ -139,7 +140,8 @@ export default function AboutPage() {
                   Identidad Visual Potente
                 </h3>
                 <p className="text-zinc-400">
-                  Cada lata es una obra de arte. Nuestro diseño refleja la intensidad y la actitud de nuestra marca.
+                  Cada lata es una obra de arte. Nuestro diseño refleja la
+                  intensidad y la actitud de nuestra marca.
                 </p>
               </div>
             </div>
@@ -153,7 +155,8 @@ export default function AboutPage() {
                   100% Argentino
                 </h3>
                 <p className="text-zinc-400">
-                  Nacimos en Buenos Aires y estamos orgullosos de ser una marca nacional que compite con las grandes.
+                  Nacimos en Buenos Aires y estamos orgullosos de ser una marca
+                  nacional que compite con las grandes.
                 </p>
               </div>
             </div>
@@ -161,14 +164,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
       <section className="relative py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
             Unite a la Revolución Energética
           </h2>
           <p className="text-xl text-zinc-400 mb-8">
-            Probá Raynix y sentí la diferencia. Tu próximo nivel te está esperando.
+            Probá Raynix y sentí la diferencia. Tu próximo nivel te está
+            esperando.
           </p>
         </div>
       </section>

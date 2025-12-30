@@ -18,7 +18,7 @@ type CartState = {
 
   addToCart: (product: Product) => void;
   removeFromCart: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void; // 🆕 Nueva función
+  updateQuantity: (id: string, quantity: number) => void; 
   clearCart: () => void;
   totalItems: () => number;
   totalPrice: () => number;
@@ -74,7 +74,7 @@ export const useCartStore = create<CartState>()(
           ),
         })),
 
-      // 🆕 Nueva función para actualizar cantidad
+      
       updateQuantity: (id, quantity) =>
         set((state) => ({
           items: state.items.map((item) =>

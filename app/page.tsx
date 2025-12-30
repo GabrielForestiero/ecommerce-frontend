@@ -1,4 +1,3 @@
-import { ProductCard } from "./components/ProductCard";
 import { HeroScene } from "./components/HeroScene";
 import { ProductsCarousel } from "./components/ProductsCarrousel";
 import { getProducts } from "./services/products";
@@ -11,12 +10,9 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen bg-black">
-      {/* Hero Section - POTENCIA TU DÍA - Full Viewport Height */}
       <section className="relative overflow-hidden h-screen">
-        {/* Fondo con gradiente dinámico */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950/30 to-cyan-950/40" />
 
-        {/* Efectos de luz radial */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 md:left-1/3 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-cyan-500/30 rounded-full blur-[100px] md:blur-[150px] animate-pulse" />
           <div
@@ -29,10 +25,11 @@ export default async function Page() {
           />
         </div>
 
-        {/* Efectos de relámpagos */}
         <div className="absolute inset-0 opacity-50">
-          {/* Rayos laterales izquierdos */}
-          <svg className="absolute top-10 left-8 w-28 h-60" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-10 left-8 w-28 h-60"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L45 60 L55 60 L40 120 L50 120 L35 200"
               fill="none"
@@ -43,7 +40,13 @@ export default async function Page() {
               filter="url(#glow-left-1)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-left-1" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-left-1"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.9" />
                 <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.2" />
               </linearGradient>
@@ -57,7 +60,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute top-1/3 left-4 w-32 h-56" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-1/3 left-4 w-32 h-56"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L40 50 L55 50 L35 120 L48 120 L30 200"
               fill="none"
@@ -68,7 +74,13 @@ export default async function Page() {
               filter="url(#glow-left-2)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-left-2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-left-2"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#a855f7" stopOpacity="0.85" />
                 <stop offset="100%" stopColor="#a855f7" stopOpacity="0.25" />
               </linearGradient>
@@ -82,7 +94,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute bottom-24 left-12 w-30 h-52" viewBox="0 0 100 200">
+          <svg
+            className="absolute bottom-24 left-12 w-30 h-52"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L55 55 L40 55 L50 110 L35 110 L45 200"
               fill="none"
@@ -93,7 +108,13 @@ export default async function Page() {
               filter="url(#glow-left-3)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-left-3" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-left-3"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#ec4899" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#ec4899" stopOpacity="0.3" />
               </linearGradient>
@@ -107,8 +128,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          {/* Rayos centrales */}
-          <svg className="absolute top-10 left-1/4 w-32 h-64" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-10 left-1/4 w-32 h-64"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L45 60 L55 60 L40 120 L50 120 L35 200"
               fill="none"
@@ -119,7 +142,13 @@ export default async function Page() {
               filter="url(#glow)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-1"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.3" />
               </linearGradient>
@@ -133,7 +162,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute top-32 right-1/4 w-40 h-72" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-32 right-1/4 w-40 h-72"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L60 50 L45 50 L55 100 L40 100 L50 150 L35 200"
               fill="none"
@@ -144,7 +176,13 @@ export default async function Page() {
               filter="url(#glow2)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-2"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#a855f7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#a855f7" stopOpacity="0.3" />
               </linearGradient>
@@ -158,7 +196,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute bottom-20 left-1/3 w-36 h-56" viewBox="0 0 100 200">
+          <svg
+            className="absolute bottom-20 left-1/3 w-36 h-56"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L40 70 L55 70 L45 130 L58 130 L40 200"
               fill="none"
@@ -169,7 +210,13 @@ export default async function Page() {
               filter="url(#glow3)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-3" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-3"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#ec4899" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#ec4899" stopOpacity="0.3" />
               </linearGradient>
@@ -183,8 +230,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          {/* Rayos laterales derechos */}
-          <svg className="absolute top-16 right-8 w-28 h-60" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-16 right-8 w-28 h-60"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L55 60 L45 60 L60 120 L50 120 L65 200"
               fill="none"
@@ -195,7 +244,13 @@ export default async function Page() {
               filter="url(#glow-right-1)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-right-1" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-right-1"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.9" />
                 <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.2" />
               </linearGradient>
@@ -209,7 +264,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute top-1/3 right-4 w-32 h-58" viewBox="0 0 100 200">
+          <svg
+            className="absolute top-1/3 right-4 w-32 h-58"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L60 50 L45 50 L65 120 L52 120 L70 200"
               fill="none"
@@ -220,7 +278,13 @@ export default async function Page() {
               filter="url(#glow-right-2)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-right-2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-right-2"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#ec4899" stopOpacity="0.85" />
                 <stop offset="100%" stopColor="#ec4899" stopOpacity="0.25" />
               </linearGradient>
@@ -234,7 +298,10 @@ export default async function Page() {
             </defs>
           </svg>
 
-          <svg className="absolute bottom-28 right-10 w-30 h-54" viewBox="0 0 100 200">
+          <svg
+            className="absolute bottom-28 right-10 w-30 h-54"
+            viewBox="0 0 100 200"
+          >
             <path
               d="M50 0 L45 55 L60 55 L50 110 L65 110 L55 200"
               fill="none"
@@ -245,7 +312,13 @@ export default async function Page() {
               filter="url(#glow-right-3)"
             />
             <defs>
-              <linearGradient id="lightning-gradient-right-3" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient
+                id="lightning-gradient-right-3"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#a855f7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#a855f7" stopOpacity="0.3" />
               </linearGradient>
@@ -260,7 +333,6 @@ export default async function Page() {
           </svg>
         </div>
 
-        {/* Partículas flotantes */}
         <div className="absolute inset-0 overflow-hidden hidden md:block">
           <div
             className="absolute top-20 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-ping opacity-60"
@@ -276,10 +348,8 @@ export default async function Page() {
           />
         </div>
 
-        {/* Contenido Centrado - Full Height */}
         <div className="relative h-full flex items-center justify-center px-4 md:px-6 max-w-7xl mx-auto">
           <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8 z-10 w-full py-8">
-            {/* Badge superior con efecto neón */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-400/40 backdrop-blur-xl shadow-[0_0_20px_rgba(6,182,212,0.2)]">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
@@ -290,7 +360,6 @@ export default async function Page() {
               </span>
             </div>
 
-            {/* Título con efectos */}
             <div className="space-y-3 md:space-y-4 max-w-4xl">
               <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight tracking-tight">
                 <span
@@ -311,7 +380,6 @@ export default async function Page() {
               </div>
             </div>
 
-            {/* Descripción mejorada */}
             <div className="space-y-2 max-w-2xl">
               <p className="text-zinc-300 text-base md:text-lg lg:text-xl font-light leading-relaxed">
                 Descubre nuestra línea completa de bebidas energéticas premium.
@@ -321,7 +389,6 @@ export default async function Page() {
               </p>
             </div>
 
-            {/* Stats con efecto glassmorphism */}
             <div className="flex flex-wrap justify-center gap-3 md:gap-4 pt-2">
               <div className="backdrop-blur-xl bg-white/5 rounded-xl p-3 md:p-4 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] transition-all duration-300">
                 <div className="text-xl md:text-2xl font-black bg-gradient-to-r from-cyan-400 to-cyan-300 text-transparent bg-clip-text">
@@ -349,7 +416,6 @@ export default async function Page() {
               </div>
             </div>
 
-            {/* CTAs mejorados */}
             <div className="flex flex-wrap justify-center gap-3 md:gap-4 pt-4">
               <a
                 href="#featured-product"
@@ -384,19 +450,15 @@ export default async function Page() {
           </div>
         </div>
 
-        {/* Fade out al final */}
         <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
       </section>
 
-      {/* Featured Product Section con HeroScene */}
       <section
         id="featured-product"
         className="relative overflow-hidden min-h-[700px] md:min-h-[800px] py-16 md:py-24"
       >
-        {/* Fondo con gradiente */}
         <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950/80 to-black" />
 
-        {/* Efectos de luz sutiles */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[150px]" />
@@ -404,17 +466,18 @@ export default async function Page() {
 
         <div className="relative px-4 md:px-6 max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-            {/* Columna Izquierda - HeroScene */}
             <div className="relative h-[500px] md:h-[650px] lg:h-[700px] order-2 lg:order-1">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 rounded-3xl blur-3xl" />
               <HeroScene />
             </div>
 
-            {/* Columna Derecha - Información del Producto */}
             <div className="space-y-6 z-10 order-1 lg:order-2">
-              {/* Badge de producto destacado */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-purple-400/40 backdrop-blur-xl">
-                <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="w-4 h-4 text-purple-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
                 <span className="text-purple-300 text-xs font-bold tracking-wider uppercase">
@@ -422,7 +485,6 @@ export default async function Page() {
                 </span>
               </div>
 
-              {/* Nombre del producto */}
               <div>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-3">
                   <span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">
@@ -437,9 +499,9 @@ export default async function Page() {
                 </div>
               </div>
 
-              {/* Descripción */}
               <p className="text-zinc-300 text-base md:text-lg leading-relaxed">
-                Nuestra bebida energética insignia, formulada con ingredientes premium para brindarte la energía que necesitas. 
+                Nuestra bebida energética insignia, formulada con ingredientes
+                premium para brindarte la energía que necesitas.
                 <span className="block mt-2 text-cyan-400 font-semibold">
                   Perfecta para cualquier momento del día.
                 </span>
@@ -469,50 +531,73 @@ export default async function Page() {
                 </div>
               </div> */}
 
-              {/* Beneficios */}
               <div className="space-y-3 pt-2">
                 <div className="flex items-center gap-3 text-zinc-300">
                   <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4 text-cyan-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <span>Aumento inmediato de energía y concentración</span>
                 </div>
                 <div className="flex items-center gap-3 text-zinc-300">
                   <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4 text-purple-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <span>Sin azúcar añadido, sabor natural</span>
                 </div>
                 <div className="flex items-center gap-3 text-zinc-300">
                   <div className="w-6 h-6 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4 text-pink-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <span>Vitaminas esenciales para tu bienestar</span>
                 </div>
               </div>
 
-              {/* Precio y CTA */}
               <div className="flex items-center gap-4 pt-4">
                 <div>
                   <div className="text-zinc-500 text-sm line-through">2000</div>
                   <div className="text-3xl font-black text-white">
-                    $<span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">1700</span>
+                    $
+                    <span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">
+                      1700
+                    </span>
                   </div>
                 </div>
-               
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Productos completos - Carrusel con Embla */}
       <ProductsCarousel products={products} />
       <Footer></Footer>
     </main>
