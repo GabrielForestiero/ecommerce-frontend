@@ -1,8 +1,8 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture, OrbitControls, Environment } from "@react-three/drei";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 
 function Can() {
@@ -116,19 +116,26 @@ function Can() {
 
 export function HeroScene() {
   return (
-    <Canvas
-      camera={{ position: [0, 0, 5], fov: 45 }}
-      gl={{ antialias: true }}
-    >
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[5, 6, 4]} intensity={1.3} />
-      <directionalLight position={[-6, 3, -5]} intensity={0.8} />
-      <directionalLight position={[0, -5, 4]} intensity={0.5} />
+    <div className="w-full h-[50vh] md:h-[60vh] lg:h-screen min-h-[300px] max-h-[800px] touch-none">
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        gl={{ antialias: true }}
+        dpr={[1, 2]}
+        style={{ width: '100%', height: '100%' }}
+      >
+        <ambientLight intensity={0.35} />
+        <directionalLight position={[5, 6, 4]} intensity={1.3} />
+        <directionalLight position={[-6, 3, -5]} intensity={0.8} />
+        <directionalLight position={[0, -5, 4]} intensity={0.5} />
 
-      <Environment preset="city" />
+        <Environment preset="city" />
 
-      <Can />
-      <OrbitControls enableZoom={false} />
-    </Canvas>
+        <Can />
+        <OrbitControls 
+          enableZoom={false}
+          enablePan={false}
+        />
+      </Canvas>
+    </div>
   );
 }

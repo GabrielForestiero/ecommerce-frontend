@@ -4,6 +4,7 @@ import { ProductsCarousel } from "./components/ProductsCarrousel";
 import { getProducts } from "./services/products";
 import { Product } from "./types/product";
 import { Footer } from "./components/Footer";
+import { AddToCartButton } from "./product/[id]/AddToCartButton";
 
 export default async function Page() {
   const products: Product[] = await getProducts();
@@ -444,7 +445,7 @@ export default async function Page() {
                 </span>
               </p>
 
-              {/* Características destacadas */}
+              {/* Características destacadas
               <div className="grid grid-cols-2 gap-4">
                 <div className="backdrop-blur-xl bg-white/5 rounded-xl p-4 border border-cyan-500/20">
                   <div className="text-cyan-400 text-sm font-bold mb-1">Energía</div>
@@ -466,7 +467,7 @@ export default async function Page() {
                   <div className="text-white text-2xl font-black">4-6h</div>
                   <div className="text-zinc-500 text-xs mt-1">Efecto</div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Beneficios */}
               <div className="space-y-3 pt-2">
@@ -504,9 +505,7 @@ export default async function Page() {
                     $<span className="bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">1700</span>
                   </div>
                 </div>
-                <button className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white font-bold hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]">
-                  Comprar Ahora
-                </button>
+               
               </div>
             </div>
           </div>
