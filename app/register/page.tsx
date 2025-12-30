@@ -18,8 +18,9 @@ export default function RegisterPage() {
     try {
       await registerApi(email, password, name);
       router.push("/login");
-    } catch {
-      setError("No se pudo crear la cuenta");
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError(err instanceof Error ? err.message : "No se pudo crear la cuenta");
     }
   }
 

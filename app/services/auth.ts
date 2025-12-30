@@ -32,11 +32,13 @@ export async function register(
     body: JSON.stringify({ email, password, name }),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error("Register failed");
+    throw new Error(data.error || "Register failed");
   }
 
-  return res.json();
+  return data;
 }
  
 export async function getMe(token: string) {
