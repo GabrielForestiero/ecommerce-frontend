@@ -11,7 +11,12 @@ type Props = {
 export default async function ProductPage({ params }: Props) {
   const { id } = await params;
 
-  const product = await getProductById(id);
+  let product = null;
+  try {
+    product = await getProductById(id);
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+  }
 
   if (!product) {
     return (

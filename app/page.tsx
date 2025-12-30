@@ -6,7 +6,13 @@ import { Footer } from "./components/Footer";
 import { AddToCartButton } from "./product/[id]/AddToCartButton";
 
 export default async function Page() {
-  const products: Product[] = await getProducts();
+  let products: Product[] = [];
+  try {
+    products = await getProducts();
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    // Fallback: empty array
+  }
 
   return (
     <main className="min-h-screen bg-black">
